@@ -1,0 +1,8 @@
+{
+  "link": {
+    "home": "/",
+    "login": "/login",
+    "changePassword" : "/change-password",
+    "register": "/register"
+  }
+}

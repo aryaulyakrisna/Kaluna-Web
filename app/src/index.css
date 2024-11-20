@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: Poppins-Regular;
+  src: url("/fonts/Poppins-Regular.ttf");
+}
+
+@font-face {
+  font-family: Poppins-Bold;
+  src: url("/fonts/Poppins-Bold.ttf");
+}
+
+@font-face {
+  font-family: Poppins-Semibold;
+  src: url("/fonts/Poppins-SemiBold.ttf");
+}
+
+.poppins-regular {
+  font-family: Poppins-Regular, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.poppins-semibold {
+  font-family: Poppins-Semibold, sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.poppins-bold {
+  font-family: Poppins-Bold, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+html {
+  @apply scroll-smooth
+}
+
+body {
+  @apply poppins-regular min-w-full min-h-screen bg-primary overflow-x-hidden scroll-smooth;
+}
+
+#root {
+  @apply flex flex-col justify-center items-center min-w-full min-h-screen scroll-smooth;
+}
+
+.bg-colorbase {
+  @apply bg-[#F5F5DC];
+}
+
+.bg-primary {
+  @apply bg-[#004225];
+}
+
+.bg-secondary {
+  @apply bg-[#FFB000];
+}
+
+.bg-tertiary {
+  @apply bg-[#FFCF9D];
+}
+
+.bg-pemasukan {
+  @apply bg-blue-500
+}
+
+.bg-tabungan {
+  @apply bg-green-500
+}
+
+.bg-saldo {
+  @apply bg-yellow-500
+}
+
+.bg-pengeluaran {
+  @apply bg-red-500
+}
+
+.text-colorbase {
+  @apply text-[#F5F5DC];
+}
+
+.text-primary {
+  @apply text-[#004225];
+}
+
+.text-secondary {
+  @apply text-[#FFB000];
+}
+
+.hover-text-secondary {
+  @apply hover:text-[#FFB000] transition-all;
+}
+
+.text-tertiary {
+  @apply text-[#FFCF9D];
+}
+
+.text-gray {
+  @apply text-[#8f8f8f];
+}
+
+.hover-text-primary {
+  @apply hover:text-[#004225];
+}
+
+.label-input {
+  @apply block text-sm poppins-semibold text-gray mb-2;
+}
+
+.input-gray {
+  @apply w-full p-3 border border-[#282828] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#282828] bg-transparent text-black;
+}
+
+.input-gray-otp {
+  @apply bg-transparent text-gray w-full text-center focus:border-none focus:outline-none poppins-semibold text-3xl;
+}
+
+.border-colorbase {
+  @apply border-2 border-[#F5F5DC] hover:border-[#004225] transition-all;
+}
+
+/* .underline-aboutus {
+  @apply after:content-[''] after:block after:bg-[#004225] after:absolute after:-bottom-4 after:rounded-full after:left-[50%] after:translate-x-[-50%] after:w-72 after:h-2;
+} */
+
+/* ini untuk membuat underline dengan after */
+
+
+.loading {
+  @apply w-20;
+}
