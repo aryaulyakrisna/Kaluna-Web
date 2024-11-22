@@ -26,7 +26,7 @@ const BigLoaderComp = () => {
           }`}
         >
           <span
-            className={`loading loading-spinner text-secondary transition duration-500 ${
+            className={`loader loading loading-spinner text-secondary transition duration-500 ${
               addZeroOpacity ? "opacity-0" : ""
             }`}
           ></span>

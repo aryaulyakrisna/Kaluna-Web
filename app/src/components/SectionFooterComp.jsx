@@ -1,7 +1,3 @@
-import { Link } from "react-router-dom";
-// import pageUrl from "../assets/pageUrl.json";
-Link
-
 const SectionFooterComp = () => {
 
   return (
@@ -16,22 +12,13 @@ const SectionFooterComp = () => {
         <div className="flex items-start gap-12">
           <div className="flex flex-col gap-1">
             <h1 className="poppins-semibold text-colorbase">Pengenalan</h1>
-            <a
-              className="pointer text-gray text-xs"
-              href="#home"
-            >
+            <a className="pointer text-gray text-xs" href="#home">
               Halaman Depan
             </a>
-            <a
-              className="pointer text-gray text-xs"
-              href="#about_us"
-            >
+            <a className="pointer text-gray text-xs" href="#about_us">
               Tentang Kami
             </a>
-            <a
-              className="pointer text-gray text-xs"
-              href="#Feature"
-            >
+            <a className="pointer text-gray text-xs" href="#Feature">
               Fitur
             </a>
           </div>

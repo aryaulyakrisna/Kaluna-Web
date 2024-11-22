@@ -1,30 +1,20 @@
-import { useEffect } from "react";
-import ScrollReveal from "scrollreveal";
+// import { useEffect } from "react";
+// import ScrollReveal from "scrollreveal";
+import Swal from "sweetalert2";
 
 const TestComp = () => {
-  useEffect(() => {
-    const sr = ScrollReveal({
-      // origin: "right",
-      distance: "50px",
-      duration: 1000,
-      delay: 200,
-      reset: true, // animations repeat every time the element comes into view
-    });
-
-    sr.reveal(".reveal");
-  }, []);
-
-  return (
-    <div>
-      <h1 className="reveal">ScrollReveal in React</h1>
-      <p className="reveal">
-        This paragraph will appear with a scrolling effect.
-      </p>
-      <div className="reveal">
-        <button>Click Me</button>
-      </div>
-    </div>
-  );
+  function handleClick() {
+    Swal.fire({
+      title: "Sukses!",
+      text: "Anda berhasil mendaftar.",
+      icon: "error",
+      customClass: {
+        popup: "my-popup",
+        confirmButton: "my-error-button",
+      },
+    })
+  }
+  return <button onClick={handleClick}>Open</button>;
 };
 
 export default TestComp;

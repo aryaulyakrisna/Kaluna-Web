@@ -1,4 +1,5 @@
 const registerModel = require("../models/register");
+const emailCheckModel = require("../middleware/emailCheck");
 const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator"); 
 
@@ -16,12 +17,12 @@ const registerController = async (req, res) => {
     const request = {...req.body, hash: hash};
 
     await registerModel(request.first_name, request.last_name, request.email, request.phone_number, request.hash);
-    res.json({
+    res.status(200).json({
       message: "Registered successfully!",
     });
   } catch (error) {
-    res.json({
-      message: "Error registering",
+    res.status(400).json({
+      message: "Email is already registered",
     });
   }
 };

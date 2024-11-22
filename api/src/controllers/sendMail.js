@@ -11,7 +11,7 @@ const sendMailController = async (req, res) => {
 
   const mailOptions = {
     from: "aryaulyakrisna2004@gmail.com", // Sender address
-    to: req.body.to, // Recipient address
+    to: req.body.email, // Recipient address
     subject: "Pesan Diriku", // Subject of the email
     text: "halo, diriku", // Plain text body of the email
     html: "<h1>Hello World<h1/>", // HTML body of the email (optional)

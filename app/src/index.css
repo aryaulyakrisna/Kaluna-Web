@@ -129,7 +129,26 @@ body {
 
 /* ini untuk membuat underline dengan after */
 
+.my-popup {  
+  @apply rounded-2xl shadow-lg bg-colorbase poppins-regular
+}
 
-.loading {
+.my-success-button {
+  @apply bg-primary rounded-lg shadow-lg poppins-semibold px-6
+}
+
+.my-error-button {
+  @apply bg-red-500 rounded-lg shadow-lg poppins-semibold px-6
+}
+
+.loader {
   @apply w-20;
+}
+
+.alert  {
+  @apply rounded-none
+}
+
+.btn-loading-xs {
+  @apply loading loading-spinner loading-sm
 }

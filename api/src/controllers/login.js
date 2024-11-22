@@ -21,8 +21,8 @@ const loginController = async (req, res) => {
 
     bcrypt.compare(password, user[0][0].password, function (err, result) {
       if (err || !result) {
-        return res.json({
-          message: "Wrong password/email!",
+        return res.status(400).json({
+          message: "Wrong password/email",
         });
       } else if (result) {
         const token = jwt.sign(
@@ -43,8 +43,8 @@ const loginController = async (req, res) => {
       }
     });
   } catch (error) {
-    res.json({
-      message: "Failed login attempt",
+    res.status(500).json({
+      message: "Server Error",
     });
   }
 };

@@ -13,6 +13,8 @@ const sendMail = require('./routes/sendMail');
 // Middlewares
 app.use(cors());
 app.use(express.json());
+const emailCheckMiddleware = require("./middleware/emailCheck")
+const sendMailCheckMiddleware = require("./middleware/sendMailCheck")
 // const template = require('./middlewares/sanitation');
 
 app.get("/", (req, res) => {
@@ -20,8 +22,8 @@ app.get("/", (req, res) => {
 });
 
 app.use('/login', login);
-app.use('/register', register);
-app.use('/send-mail', sendMail);
+app.use('/register', emailCheckMiddleware, register);
+app.use('/send-mail', sendMailCheckMiddleware, sendMail);
 
 app.listen(PORT, () => {
   console.log("Listening on port " + PORT);

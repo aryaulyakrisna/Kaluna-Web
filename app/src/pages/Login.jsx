@@ -1,29 +1,27 @@
-import { useState } from "react";
-import { Helmet } from "react-helmet";
+import { useEffect, useState } from "react";
 import LoginComp from "../components/LoginComp";
 import ForgotPasswordComp from "../components/ForgotPasswordComp";
 import SmallLoaderComp from "../components/SmallLoaderComp";
 
 const Login = () => {
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
-  
+  const [toForgotPassword, setToForgotPassword] = useState(false);
+
   function moveToForgotPassword() {
-    setShowForgotPassword(!showForgotPassword);
+    setToForgotPassword(!toForgotPassword);
   }
+
+  useEffect(() => {
+    document.title = toForgotPassword? "Lupa Password" : "Masuk" 
+  }, [toForgotPassword])
 
   return (
     <>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>{showForgotPassword ? "Lupa Password" : "Masuk"}</title>
-      </Helmet>
-
       <SmallLoaderComp />
 
-      {showForgotPassword ? (
+      {toForgotPassword ? (
         <ForgotPasswordComp showLogin={moveToForgotPassword} />
       ) : (
-        <LoginComp showForgotPassword={moveToForgotPassword} />
+        <LoginComp toForgotPassword={moveToForgotPassword} />
       )}
     </>
   );

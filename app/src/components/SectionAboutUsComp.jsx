@@ -47,13 +47,13 @@ const SectionAboutUsComp = () => {
         }
       />
 
-      <h1 className="text-primary poppins-bold text-3xl after-title-underline relative reveal-right-aboutus">
+      <h1 className="text-primary poppins-bold text-3xl after-title-underline reveal-right-aboutus">
         Tentang Kalun<span className="text-secondary">a</span>
       </h1>
       <div className="w-full max-w-4xl mt-12 text-primary">
         <h2 className="text-2xl poppins-bold reveal-left-aboutus">Halo 👋</h2>
-        <div className="text-lg mt-6 reveal-left-aboutus">
-          <p>
+        <div className="text-lg mt-6">
+          <p className="reveal-left-aboutus">
             Selamat datang di Kaluna, aplikasi manajemen keuangan interaktif
             yang dibuat khusus untuk kamu yang merasa{" "}
             <span className="text-red-600">&quot;keuangan itu ribet&quot;</span>
@@ -61,7 +61,9 @@ const SectionAboutUsComp = () => {
             uang yang keluar-masuk, dan itulah kenapa Kaluna hadir, untuk bikin
             perjalanan finansialmu jadi simpel, seru, dan nggak bikin pusing.
           </p>
-          <p className="poppins-bold text-2xl mt-6 reveal-left-aboutus">Apa itu Kaluna?</p>
+          <p className="poppins-bold text-2xl mt-6 reveal-left-aboutus">
+            Apa itu Kaluna?
+          </p>
           <p className="mt-6 max-w-lg reveal-left-aboutus">
             Singkatnya,{" "}
             <span className="text-green-600">
@@ -71,7 +73,6 @@ const SectionAboutUsComp = () => {
           </p>
           <ul
             className="list-none mt-6 space-y-4 text-gray-800 pl-6"
-            id="container_list"
           >
             <li className="reveal-right-aboutus flex items-start">
               <span className="text-green-600 font-bold mr-2 block">✔</span>

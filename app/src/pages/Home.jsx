@@ -1,5 +1,4 @@
-import { Helmet } from "react-helmet";
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import BigLoaderComp from "../components/BigLoaderComp";
 import HeaderComp from "../components/HeaderComp";
 import SectionLandingComp from "../components/SectionLandingComp";
@@ -11,13 +10,12 @@ import SectionFooterComp from "../components/SectionFooterComp";
 const Home = () => {
   const [loaderComplete, setLoaderComplete] = useState(false);
 
+  useEffect(() => {
+    document.title = "Kaluna";
+  }, [])
+
   return (
     <>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>Kaluna</title>
-      </Helmet>
-
       <SectionLandingComp />
       <SectionAboutUsComp />
       <SectionFeatureComp />

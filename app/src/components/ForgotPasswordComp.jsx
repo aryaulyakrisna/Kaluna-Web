@@ -1,16 +1,92 @@
+import axios from "axios";
 import PropTypes from "prop-types";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const ForgotPasswordComp = ({ showLogin }) => {
+  const [loading, setLoading] = useState(false);
+  const [errorText, setErrorText] = useState("");
+  const navigate = useNavigate();
+
+  const handleSetErrorText = (text) => {
+    setErrorText(text);
+  };
+
+  const handleAlert = (alertProps) => {
+    Swal.fire({
+      title: alertProps.title,
+      text: alertProps.text,
+      icon: alertProps.icon,
+      confirmButtonText: alertProps.confirmButtonText,
+      customClass: {
+        popup: alertProps.popup,
+        confirmButton: alertProps.confirmButton,
+      },
+    }).then((result) => {
+      if (alertProps.nextUrl && result.isConfirmed) {
+        navigate(alertProps.nextUrl, { state: { email: alertProps.email } });
+      }
+    });
+  };
+
+  const handleForgotPassword = async (event) => {
+    event.preventDefault();
+    setLoading(!loading);
+
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+    console.log(data.email);
+
+    try {
+      const response = await axios.post(
+        import.meta.env.VITE_APP_BASE_URL +
+          "/" +
+          import.meta.env.VITE_APP_SENDMAIL_URL,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status == 200) {
+        handleAlert({
+          title: "Sukses!",
+          text: "Anda berhasil mendaftar",
+          icon: "success",
+          popup: "my-popup",
+          confirmButton: "my-success-button",
+          nextUrl: "/login",
+          email: data.email,
+          confirmButtonText: "Masuk",
+        });
+      }
+    } catch (error) {
+      const message = error.response.data.message;
+      if (message == "Server Error") {
+        handleSetErrorText("Mohon coba beberapa saat lagi.");
+      } else if (message == "Email is not registered") {
+        handleSetErrorText("Email tidak terdaftar.");
+      }
+    }
+
+    setLoading(false);
+  };
   return (
     <div className="bg-colorbase shadow-2xl rounded-xl px-12 py-16 max-w-96 w-full border">
       <h1 className="text-4xl text-primary poppins-bold mb-6">
-        Lupa Password
+        Lupa Password <br />
+        <span className="text-red-600 text-sm poppins-regular">
+          {errorText}
+        </span>
       </h1>
       <p className="text-sm text-black pb-6">
         Kami akan membantu Anda mengatur ulang password. Masukkan e-mail Anda
         agar kami dapat mengirimkan kode verifikasi (OTP).
       </p>
-      <form>
+      <form onSubmit={handleForgotPassword}>
         {/* Email Input */}
         <div className="mb-4">
           <label htmlFor="email" className="label-input">
@@ -20,6 +96,7 @@ const ForgotPasswordComp = ({ showLogin }) => {
             required
             type="email"
             id="email"
+            name="email"
             className="input-gray"
             placeholder="Ketik di sini"
           />
@@ -31,7 +108,7 @@ const ForgotPasswordComp = ({ showLogin }) => {
             type="submit"
             className="w-full bg-primary text-white poppins-semibold py-3 rounded-lg hover:shadow-xl hover:opacity-90 active:scale-95 transition-all"
           >
-            Kirim
+            {loading ? <span className="btn-loading-xs"></span> : "Masuk"}
           </button>
         </div>
 

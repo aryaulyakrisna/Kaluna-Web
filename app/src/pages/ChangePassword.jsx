@@ -1,15 +1,14 @@
-import { Helmet } from "react-helmet"
+import { useEffect } from "react";
 import ChangePasswordComp from "../components/ChangePasswordComp"
 import SmallLoaderComp from "../components/SmallLoaderComp";
 
 const ChangePassword = () => {
+  useEffect(() => {
+    document.title = "Ubah Password";
+  }, [])
+
   return (
     <>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>Ubah Password</title>
-      </Helmet>
-
       <SmallLoaderComp />
       <ChangePasswordComp />
     </>
