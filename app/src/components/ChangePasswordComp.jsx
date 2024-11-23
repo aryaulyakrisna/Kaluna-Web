@@ -2,10 +2,14 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import pageUrl from "../assets/pageUrl.json";
 
+
 const LoginComp = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
+  // const [loading, setLoading] = useState(false)
   const [otp, setOtp] = useState("");
+
+  // const location = useLocation();
 
   const handleInputChangeForOTP = (e) => {
     const value = e.target.value;
@@ -23,6 +27,42 @@ const LoginComp = () => {
   const toggleConfirmNewPasswordVisibility = () => {
     setShowConfirmNewPassword(!showConfirmNewPassword);
   };
+
+
+  // const handleChangePassword = async (event) => {
+  //   event.preventDefault();
+  //   setLoading(!loading);
+
+  //   const formData = new FormData(event.target);
+  //   const data = Object.fromEntries(formData);
+
+  //   try {
+  //     const response = await axios.post(
+  //       import.meta.env.VITE_APP_BASE_URL +
+  //         "/" +
+  //         import.meta.env.VITE_APP_SENDMAIL_URL,
+  //       data,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     if (response.status == 200) {
+  //       navigate("/change-password", { state: { email: data.email } });
+  //     }
+  //   } catch (error) {
+  //     const message = error.response.data.message;
+  //     if (message == "Server Error") {
+  //       handleSetErrorText("Mohon coba beberapa saat lagi.");
+  //     } else if (message == "Email is not registered") {
+  //       handleSetErrorText("Email tidak terdaftar.");
+  //     }
+  //   }
+
+  //   setLoading(false);
+  // };
 
   return (
     <div className="bg-colorbase shadow-2xl rounded-xl px-12 py-16 max-w-[600px] w-full border">

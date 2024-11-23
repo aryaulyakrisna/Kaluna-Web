@@ -1,5 +1,4 @@
 const registerModel = require("../models/register");
-const emailCheckModel = require("../middleware/emailCheck");
 const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator"); 
 

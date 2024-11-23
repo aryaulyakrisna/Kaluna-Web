@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const sendMailModel = require("../models/sendMail");
 
 const sendMailController = async (req, res) => {
   const transporter = nodemailer.createTransport({
@@ -9,16 +10,28 @@ const sendMailController = async (req, res) => {
     },
   });
 
+  request = req.body;
+  const otp = `${Math.floor(Math.random() * 10)}${Math.floor(
+    Math.random() * 10
+  )}${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}`;
+
   const mailOptions = {
     from: "aryaulyakrisna2004@gmail.com", // Sender address
     to: req.body.email, // Recipient address
-    subject: "Pesan Diriku", // Subject of the email
-    text: "halo, diriku", // Plain text body of the email
-    html: "<h1>Hello World<h1/>", // HTML body of the email (optional)
+    subject: "Pesan Kode OTP", // Subject of the email
+    html: `
+    <div
+      style="width: 100%; height: 300px; background-color: #004225; line-height: 300px"
+      id="otp">
+      <div style="vertical-align: middle; color: #F5F5DC; font-weight: 700; font-size: 4rem; width: 100%; text-align: center">
+        ${otp}
+      </div>
+      </div>
+    `, // HTML body of the email (optional)
   };
 
   try {
-    // Send email
+    await sendMailModel(request.id, request.email, otp);
     const info = await transporter.sendMail(mailOptions);
     res.status(200).json({ message: "Email sent successfully", info });
   } catch (error) {

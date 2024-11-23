@@ -2,7 +2,6 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 
 const ForgotPasswordComp = ({ showLogin }) => {
   const [loading, setLoading] = useState(false);
@@ -12,68 +11,47 @@ const ForgotPasswordComp = ({ showLogin }) => {
   const handleSetErrorText = (text) => {
     setErrorText(text);
   };
-
-  const handleAlert = (alertProps) => {
-    Swal.fire({
-      title: alertProps.title,
-      text: alertProps.text,
-      icon: alertProps.icon,
-      confirmButtonText: alertProps.confirmButtonText,
-      customClass: {
-        popup: alertProps.popup,
-        confirmButton: alertProps.confirmButton,
-      },
-    }).then((result) => {
-      if (alertProps.nextUrl && result.isConfirmed) {
-        navigate(alertProps.nextUrl, { state: { email: alertProps.email } });
-      }
-    });
-  };
+  
 
   const handleForgotPassword = async (event) => {
     event.preventDefault();
-    setLoading(!loading);
 
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData);
-    console.log(data.email);
-
-    try {
-      const response = await axios.post(
-        import.meta.env.VITE_APP_BASE_URL +
-          "/" +
-          import.meta.env.VITE_APP_SENDMAIL_URL,
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+    if (!loading) {
+      setLoading(!loading);
+  
+      const formData = new FormData(event.target);
+      const data = Object.fromEntries(formData);
+  
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_APP_BASE_URL +
+            "/" +
+            import.meta.env.VITE_APP_SENDMAIL_URL,
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+  
+        if (response.status == 200) {
+          navigate("/change-password", { state: { email: data.email } });
         }
-      );
-
-      if (response.status == 200) {
-        handleAlert({
-          title: "Sukses!",
-          text: "Anda berhasil mendaftar",
-          icon: "success",
-          popup: "my-popup",
-          confirmButton: "my-success-button",
-          nextUrl: "/login",
-          email: data.email,
-          confirmButtonText: "Masuk",
-        });
+      } catch (error) {
+        const message = error.response.data.message;
+        if (message == "Server Error") {
+          handleSetErrorText("Mohon coba beberapa saat lagi.");
+        } else if (message == "Email is not registered") {
+          handleSetErrorText("Email tidak terdaftar.");
+        }
       }
-    } catch (error) {
-      const message = error.response.data.message;
-      if (message == "Server Error") {
-        handleSetErrorText("Mohon coba beberapa saat lagi.");
-      } else if (message == "Email is not registered") {
-        handleSetErrorText("Email tidak terdaftar.");
-      }
+  
+      setLoading(false);
     }
-
-    setLoading(false);
   };
+
+  
   return (
     <div className="bg-colorbase shadow-2xl rounded-xl px-12 py-16 max-w-96 w-full border">
       <h1 className="text-4xl text-primary poppins-bold mb-6">

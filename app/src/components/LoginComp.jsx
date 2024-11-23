@@ -20,39 +20,43 @@ const LoginComp = ({ toForgotPassword }) => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    setLoading(!loading);
 
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData);
-
-    try {
-      const response = await axios.post(
-        import.meta.env.VITE_APP_BASE_URL +
-          "/" +
-          import.meta.env.VITE_APP_LOGIN_URL,
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+    if(!loading){
+      setLoading(!loading);
+  
+      const formData = new FormData(event.target);
+      const data = Object.fromEntries(formData);
+  
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_APP_BASE_URL +
+            "/" +
+            import.meta.env.VITE_APP_LOGIN_URL,
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+  
+        if (response.status == 200) {
+          sessionStorage.setItem(JSON.parse(response.data))
         }
-      );
+      } catch (error) {
+        console.log(error)
+        const message = error.response.data.message;
+        if (message == "Server Error") {
+          handleSetErrorText("Mohon coba beberapa saat lagi.")
+        } else {
+          handleSetErrorText("Salah email atau password.");
+          console.log(errorText)
+        }
+      }
+  
+      setLoading(false);
 
-      if (response.status == 200) {
-        sessionStorage.setItem(JSON.parse(response.data))
-      }
-    } catch (error) {
-      console.log(error)
-      const message = error.response.data.message;
-      if (message == "Server Error") {
-        handleSetErrorText("Mohon coba beberapa saat lagi.")
-      } else {
-        handleSetErrorText("Salah email atau password.");
-        console.log(errorText)
-      }
     }
-
-    setLoading(false);
   };
 
   return (
@@ -135,6 +139,7 @@ const LoginComp = ({ toForgotPassword }) => {
           <button
             type="submit"
             className="w-full bg-primary text-white poppins-semibold py-3 rounded-lg hover:shadow-xl hover:opacity-90 active:scale-95 transition-all"
+            disabled = {loading}
           >
             {loading ? <span className="btn-loading-xs"></span> : "Masuk"}
           </button>

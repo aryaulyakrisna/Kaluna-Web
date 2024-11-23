@@ -50,59 +50,60 @@ const RegisterComp = () => {
 
   const handleRegister = async (event) => {
     event.preventDefault();
-    setLoading(!loading);
-
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData);
-
-    try {
-      const response = await axios.post(
-        import.meta.env.VITE_APP_BASE_URL +
-          "/" +
-          import.meta.env.VITE_APP_REGISTER_URL,
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+    if (!loading) {
+      setLoading(!loading);
+  
+      const formData = new FormData(event.target);
+      const data = Object.fromEntries(formData);
+  
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_APP_BASE_URL +
+            "/" +
+            import.meta.env.VITE_APP_REGISTER_URL,
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+  
+        if (response.status == 200) {
+          handleAlert({
+            title: "Sukses!",
+            text: "Anda berhasil mendaftar",
+            icon: "success",
+            popup: "my-popup",
+            confirmButton: "my-success-button",
+            nextUrl: "/login",
+            confirmButtonText: "Masuk",
+          });
         }
-      );
-
-      if (response.status == 200) {
-        handleAlert({
-          title: "Sukses!",
-          text: "Anda berhasil mendaftar",
-          icon: "success",
-          popup: "my-popup",
-          confirmButton: "my-success-button",
-          nextUrl: "/login",
-          confirmButtonText: "Masuk",
-        });
-      }
-    } catch (error) {
-      const message = error.response.data.message;
-      if (message == "Error registering" || message == "Server error") {
-        handleAlert({
-          title: "Gagal!",
-          text: "Kesalahan ada di kami, mohon coba beberapa saat lagi.",
-          icon: "error",
-          popup: "my-popup",
-          confirmButton: "my-error-button",
-          confirmButtonText: "Ok",
-        });
-      } else if (message == "Email is already registered") {
-        handleAlert({
-          title: "Gagal!",
-          text: "Email telah terdaftar, coba email lain.",
-          icon: "error",
-          popup: "my-popup",
-          confirmButton: "my-error-button",
-          confirmButtonText: "Ok",
-        });
-      }
+      } catch (error) {
+        const message = error.response.data.message;
+        if (message == "Error registering" || message == "Server error") {
+          handleAlert({
+            title: "Gagal!",
+            text: "Kesalahan ada di kami, mohon coba beberapa saat lagi.",
+            icon: "error",
+            popup: "my-popup",
+            confirmButton: "my-error-button",
+            confirmButtonText: "Ok",
+          });
+        } else if (message == "Email is already registered") {
+          handleAlert({
+            title: "Gagal!",
+            text: "Email telah terdaftar, coba email lain.",
+            icon: "error",
+            popup: "my-popup",
+            confirmButton: "my-error-button",
+            confirmButtonText: "Ok",
+          });
+        }
     }
-
     setLoading(false);
+    }
   };
 
   return (
@@ -276,6 +277,7 @@ const RegisterComp = () => {
             <button
               type="submit"
               className="w-full bg-primary text-white poppins-semibold py-3 rounded-lg hover:shadow-xl hover:opacity-90 active:scale-95 transition-all"
+              disabled={loading}
             >
               {loading ? <span className="btn-loading-xs"></span> : "Daftar"}
             </button>
