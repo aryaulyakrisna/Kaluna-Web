@@ -1,17 +1,22 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import pageUrl from "../assets/pageUrl.json";
-
+import axios from "axios";
 
 const LoginComp = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
-  // const [loading, setLoading] = useState(false)
+  const [errorText, setErrorText] = useState("");
+  const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState("");
 
-  // const location = useLocation();
+  const location = useLocation();
+  const { state } = location;
+  const email = state?.email;
 
-  const handleInputChangeForOTP = (e) => {
+  sessionStorage.setItem("email-change-password", JSON.stringify(email));
+
+  const handleOTPCodeInput = (e) => {
     const value = e.target.value;
 
     // Prevent any char besides number are included
@@ -19,6 +24,10 @@ const LoginComp = () => {
       setOtp(value);
     }
   };
+
+  const handleSetErrorText = (text) => {
+    setErrorText(text)
+  }
 
   const toggleNewPasswordVisibility = () => {
     setShowNewPassword(!showNewPassword);
@@ -28,41 +37,43 @@ const LoginComp = () => {
     setShowConfirmNewPassword(!showConfirmNewPassword);
   };
 
+  const handleChangePassword = async (event) => {
+    event.preventDefault();
 
-  // const handleChangePassword = async (event) => {
-  //   event.preventDefault();
-  //   setLoading(!loading);
+    if (!loading) {
+      setLoading(!loading);
 
-  //   const formData = new FormData(event.target);
-  //   const data = Object.fromEntries(formData);
+      const formData = new FormData(event.target);
+      const data = Object.fromEntries(formData);
 
-  //   try {
-  //     const response = await axios.post(
-  //       import.meta.env.VITE_APP_BASE_URL +
-  //         "/" +
-  //         import.meta.env.VITE_APP_SENDMAIL_URL,
-  //       data,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_APP_BASE_URL +
+            "/" +
+            import.meta.env.VITE_APP_SENDMAIL_URL,
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-  //     if (response.status == 200) {
-  //       navigate("/change-password", { state: { email: data.email } });
-  //     }
-  //   } catch (error) {
-  //     const message = error.response.data.message;
-  //     if (message == "Server Error") {
-  //       handleSetErrorText("Mohon coba beberapa saat lagi.");
-  //     } else if (message == "Email is not registered") {
-  //       handleSetErrorText("Email tidak terdaftar.");
-  //     }
-  //   }
+        if (response.status == 200) {
+          //
+        }
+      } catch (error) {
+        const message = error.response.data.message;
+        if (message == "Server Error") {
+          handleSetErrorText("Mohon coba beberapa saat lagi.");
+        } else if (message == "Email is not registered") {
+          handleSetErrorText("Email tidak terdaftar.");
+        }
+      }
 
-  //   setLoading(false);
-  // };
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="bg-colorbase shadow-2xl rounded-xl px-12 py-16 max-w-[600px] w-full border">
@@ -86,7 +97,7 @@ const LoginComp = () => {
             className="input-gray-otp"
             placeholder="0000"
             value={otp}
-            onChange={handleInputChangeForOTP}
+            onChange={handleOTPCodeInput}
           />
         </div>
 

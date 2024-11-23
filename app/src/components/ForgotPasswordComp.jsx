@@ -2,6 +2,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import pageUrl from "../assets/pageUrl.json"
 
 const ForgotPasswordComp = ({ showLogin }) => {
   const [loading, setLoading] = useState(false);
@@ -36,7 +37,7 @@ const ForgotPasswordComp = ({ showLogin }) => {
         );
   
         if (response.status == 200) {
-          navigate("/change-password", { state: { email: data.email } });
+          navigate(pageUrl.link.changePassword, { state: { email: data.email } });
         }
       } catch (error) {
         const message = error.response.data.message;
@@ -51,7 +52,7 @@ const ForgotPasswordComp = ({ showLogin }) => {
     }
   };
 
-  
+
   return (
     <div className="bg-colorbase shadow-2xl rounded-xl px-12 py-16 max-w-96 w-full border">
       <h1 className="text-4xl text-primary poppins-bold mb-6">
@@ -85,8 +86,9 @@ const ForgotPasswordComp = ({ showLogin }) => {
           <button
             type="submit"
             className="w-full bg-primary text-white poppins-semibold py-3 rounded-lg hover:shadow-xl hover:opacity-90 active:scale-95 transition-all"
+            disabled={loading}
           >
-            {loading ? <span className="btn-loading-xs"></span> : "Masuk"}
+            {loading ? <span className="btn-loading-xs"></span> : "Kirim"}
           </button>
         </div>
 

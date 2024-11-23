@@ -41,7 +41,7 @@ const LoginComp = ({ toForgotPassword }) => {
         );
   
         if (response.status == 200) {
-          sessionStorage.setItem(JSON.parse(response.data))
+          sessionStorage.setItem("auth", JSON.stringify(response.data))
         }
       } catch (error) {
         console.log(error)
@@ -63,9 +63,11 @@ const LoginComp = ({ toForgotPassword }) => {
     <div className="bg-colorbase shadow-2xl rounded-xl px-12 py-16 max-w-96 w-full border">
       <h1 className="text-4xl text-primary poppins-bold mb-6">
         Masuk <br />{" "}
-        <span className="text-red-600 text-sm poppins-regular">
-          {errorText}
-        </span>
+        {errorText && (
+          <span className="text-red-600 text-sm poppins-regular">
+            {errorText}
+          </span>
+        )}
       </h1>
       <form onSubmit={handleLogin}>
         {/* Email Input */}
@@ -139,7 +141,7 @@ const LoginComp = ({ toForgotPassword }) => {
           <button
             type="submit"
             className="w-full bg-primary text-white poppins-semibold py-3 rounded-lg hover:shadow-xl hover:opacity-90 active:scale-95 transition-all"
-            disabled = {loading}
+            disabled={loading}
           >
             {loading ? <span className="btn-loading-xs"></span> : "Masuk"}
           </button>

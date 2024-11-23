@@ -180,11 +180,11 @@ const RegisterComp = () => {
             <div className="mb-4 relative">
               <label htmlFor="password" className="label-input block">
                 Password{" "}
-                <span className="poppins-regular text-xs text-red-600">
-                  {!regex.test(password) && password.length != 0
-                    ? "(6+ karakter, huruf besar, kecil, dan angka)"
-                    : ""}
-                </span>
+                {!regex.test(password) && password.length != 0 && (
+                  <span className="poppins-regular text-xs text-red-600">
+                    `6+ karakter, huruf besar, kecil, dan angka`
+                  </span>
+                )}
               </label>
               <input
                 required
@@ -227,13 +227,13 @@ const RegisterComp = () => {
             <div className="mb-4 relative">
               <label htmlFor="confirm_password" className="label-input">
                 Confirm Password{" "}
-                <span className="poppins-regular text-xs text-red-600">
-                  {password != confirmPassword &&
+                {password != confirmPassword &&
                   confirmPassword.length != 0 &&
-                  password.length != 0
-                    ? "(password tidak cocok)"
-                    : ""}
-                </span>
+                  password.length != 0 && (
+                    <span className="poppins-regular text-xs text-red-600">
+                      `password tidak cocok`
+                    </span>
+                  )}
               </label>
               <input
                 required
