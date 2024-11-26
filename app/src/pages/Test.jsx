@@ -1,19 +1,11 @@
-// import LottieComp from "../components/LottieComp";
-// import BussinessLottie from "../assets/business-analysis-presentation.json"
-// import { useNavigate } from "react-router-dom";
-// import HeaderComp from "../components/HeaderComp";
-// import TestComp from "../components/TestComp";
-// import { useEffect } from "react";
+import MainFooterComp from "../components/MainFooterComp";
+import MainHeaderComp from "../components/MainHeaderComp";
 
 const Test = () => {
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   navigate("/login", { state: { key: "value" } });
-  // }, [])
-  
   return (
     <>
-
+      <MainHeaderComp/>
+      <MainFooterComp/>
     </>
   );
 }

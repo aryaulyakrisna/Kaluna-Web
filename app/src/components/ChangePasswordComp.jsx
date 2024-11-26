@@ -1,56 +1,82 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import pageUrl from "../assets/pageUrl.json";
+import Swal from "sweetalert2";
 import axios from "axios";
 
 const LoginComp = () => {
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
-  const [errorText, setErrorText] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [regexTest, setRegexTest] = useState(false);
   const [otp, setOtp] = useState("");
 
   const location = useLocation();
   const { state } = location;
-  const email = state?.email;
+  const email = state?.email || JSON.parse(localStorage.getItem("email"));
+  // console.log(email);
+  if(!email) {
+    window.location = pageUrl.link.home
+  }
 
-  sessionStorage.setItem("email-change-password", JSON.stringify(email));
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+  const handleSetPassword = (e) => {
+    setPassword(e.target.value);
+    setRegexTest(regex.test(e.target.value));
+  };
 
   const handleOTPCodeInput = (e) => {
     const value = e.target.value;
 
     // Prevent any char besides number are included
-    if (/^\d{0,4}$/.test(value)) {
+    if (/^\d{0,6}$/.test(value)) {
       setOtp(value);
     }
   };
 
-  const handleSetErrorText = (text) => {
-    setErrorText(text)
-  }
+  const handleAlert = (alertProps) => {
+    Swal.fire({
+      title: alertProps.title,
+      text: alertProps.text,
+      icon: alertProps.icon,
+      confirmButtonText: alertProps.confirmButtonText,
+      customClass: {
+        popup: alertProps.popup,
+        confirmButton: alertProps.confirmButton,
+      },
+    }).then((result) => {
+      if (alertProps.nextUrl && result.isConfirmed) {
+        window.location.href = alertProps.nextUrl;
+      }
+    });
+  };
 
-  const toggleNewPasswordVisibility = () => {
-    setShowNewPassword(!showNewPassword);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const toggleConfirmNewPasswordVisibility = () => {
-    setShowConfirmNewPassword(!showConfirmNewPassword);
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   const handleChangePassword = async (event) => {
     event.preventDefault();
 
-    if (!loading) {
-      setLoading(!loading);
+    if (!loading && regexTest && password === confirmPassword) {
+      setLoading(true);
 
       const formData = new FormData(event.target);
-      const data = Object.fromEntries(formData);
+      const data = { ...Object.fromEntries(formData), email: email };
+
+      // console.log(data);
 
       try {
         const response = await axios.post(
           import.meta.env.VITE_APP_BASE_URL +
             "/" +
-            import.meta.env.VITE_APP_SENDMAIL_URL,
+            import.meta.env.VITE_APP_CHANGEPASSWORD_URL,
           data,
           {
             headers: {
@@ -60,18 +86,51 @@ const LoginComp = () => {
         );
 
         if (response.status == 200) {
-          //
+          localStorage.removeItem("email");
+          
+          handleAlert({
+            title: "Berhasil!",
+            text: "Berhasil merubah password.",
+            icon: "success",
+            popup: "my-popup",
+            confirmButton: "my-success-button",
+            confirmButtonText: "Masuk",
+            nextUrl: pageUrl.link.login
+          });
         }
       } catch (error) {
         const message = error.response.data.message;
         if (message == "Server Error") {
-          handleSetErrorText("Mohon coba beberapa saat lagi.");
-        } else if (message == "Email is not registered") {
-          handleSetErrorText("Email tidak terdaftar.");
+          handleAlert({
+            title: "Gagal!",
+            text: "Kesalahan ada di kami, mohon coba beberapa saat lagi.",
+            icon: "error",
+            popup: "my-popup",
+            confirmButton: "my-error-button",
+            confirmButtonText: "Ok",
+          });
+        } else if (message == "Invalid or expired OTP") {
+          handleAlert({
+            title: "Gagal!",
+            text: "Kode OTP yang anda masukan salah atau sudah kadaluwarsa. Silahkan coba lagi.",
+            icon: "error",
+            popup: "my-popup",
+            confirmButton: "my-error-button",
+            confirmButtonText: "Ok",
+          });
         }
       }
 
       setLoading(false);
+    } else {
+      handleAlert({
+        title: "Peringatan!",
+        text: "Tolong masukan semua data dengan benar.",
+        icon: "warning",
+        popup: "my-popup",
+        confirmButton: "my-warning-button",
+        confirmButtonText: "Ok",
+      });
     }
   };
 
@@ -82,20 +141,21 @@ const LoginComp = () => {
       </h1>
       <p className="text-sm text-black pb-6">
         Cek inbox atau spam e-mail Anda, kami baru mengirimkan kode verifikasi
-        (OTP) untuk melanjutkan pengaturan password.
+        (OTP) untuk melanjutkan pengaturan password. Kode OTP akan kadaluwarsa dalam 5 menit.
       </p>
-      <form>
+      <form onSubmit={handleChangePassword}>
         {/* Email Input */}
         <div className="mb-4">
           <label htmlFor="otp" className="label-input">
-            Kode OTP
+            Kode OTP (6)
           </label>
           <input
             required
             type="text"
             id="otp"
+            name="otp"
             className="input-gray-otp"
-            placeholder="0000"
+            placeholder="000000"
             value={otp}
             onChange={handleOTPCodeInput}
           />
@@ -103,22 +163,30 @@ const LoginComp = () => {
 
         {/* Password Input */}
         <div className="mb-4 relative">
-          <label htmlFor="new_password" className="label-input">
-            Password
+          <label htmlFor="password" className="label-input">
+            Password{" "}
+            {!regexTest && password.length > 0 && (
+              <span className="poppins-regular text-xs text-red-600">
+                {"(6+ karakter, huruf besar, kecil, dan angka)"}
+              </span>
+            )}
           </label>
           <input
             required
-            type={showNewPassword ? "text" : "password"}
-            id="new_password"
+            value={password}
+            onChange={handleSetPassword}
+            type={showPassword ? "text" : "password"}
+            id="password"
+            name="password"
             className="input-gray pr-10"
             placeholder="Ketik di sini"
           />
           <button
             type="button"
             className="absolute right-3 top-[2.75rem] text-gray hover-text-primary focus:outline-none"
-            onClick={toggleNewPasswordVisibility}
+            onClick={togglePasswordVisibility}
           >
-            {showNewPassword ? (
+            {showPassword ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4"
@@ -143,11 +211,18 @@ const LoginComp = () => {
         {/* Confirm Password Input */}
         <div className="mb-4 relative">
           <label htmlFor="confirm_password" className="label-input">
-            Password
+            Confirm Password{" "}
+            {password != confirmPassword && confirmPassword.length > 0 && (
+              <span className="poppins-regular text-xs text-red-600">
+                {"(password tidak cocok)"}
+              </span>
+            )}
           </label>
           <input
             required
-            type={showConfirmNewPassword ? "text" : "password"}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            type={showConfirmPassword ? "text" : "password"}
             id="confirm_password"
             className="input-gray pr-10"
             placeholder="Ketik di sini"
@@ -157,7 +232,7 @@ const LoginComp = () => {
             className="absolute right-3 top-[2.75rem] text-gray hover-text-primary focus:outline-none"
             onClick={toggleConfirmNewPasswordVisibility}
           >
-            {showConfirmNewPassword ? (
+            {showConfirmPassword ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4"
@@ -177,16 +252,6 @@ const LoginComp = () => {
               </svg>
             )}
           </button>
-        </div>
-
-        {/* Send New OTP code */}
-        <div className="text-left mb-6">
-          <Link
-            to={pageUrl.link.changePassword}
-            className="text-sm text-black hover-text-primary"
-          >
-            Kirim OTP? Tunggu 05:00
-          </Link>
         </div>
 
         {/* Submit Button */}

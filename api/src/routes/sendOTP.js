@@ -1,6 +1,6 @@
 const express = require("express");
-const sendMailController = require("../controllers/sendMail");
-const { body } = require('express-validator'); // Middleware
+const sendOTPController = require("../controllers/sendOTP");
+const { body } = require("express-validator"); // Middleware
 const router = express.Router();
 
 router.post(
@@ -11,7 +11,7 @@ router.post(
       .isEmail()
       .withMessage("Please provide a valid email."),
   ],
-  sendMailController
+  sendOTPController
 );
 
 module.exports = router;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {  useState } from "react";
 import { Link } from "react-router-dom";
 import pageUrl from "../assets/pageUrl.json";
 import Swal from "sweetalert2";
@@ -11,8 +11,14 @@ const RegisterComp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [phoneNum, setPhoneNum] = useState("");
   const [loading, setLoading] = useState(false);
+  const [regexTest, setRegexTest] = useState(false);
 
-  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{7,}$/;
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+
+  const handleSetPassword = (e) => {
+    setPassword(e.target.value)
+    setRegexTest(regex.test(e.target.value));
+  }
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -26,7 +32,7 @@ const RegisterComp = () => {
     const value = e.target.value;
 
     // Prevent any char besides number are included
-    if (/^\d{0,}$/.test(value)) {
+    if (/^\d{0,20}$/.test(value)) {
       setPhoneNum(value);
     }
   };
@@ -50,12 +56,12 @@ const RegisterComp = () => {
 
   const handleRegister = async (event) => {
     event.preventDefault();
-    if (!loading) {
-      setLoading(!loading);
-  
+
+    if (!loading && regexTest && password === confirmPassword) {
+      setLoading(true);
       const formData = new FormData(event.target);
       const data = Object.fromEntries(formData);
-  
+
       try {
         const response = await axios.post(
           import.meta.env.VITE_APP_BASE_URL +
@@ -68,15 +74,15 @@ const RegisterComp = () => {
             },
           }
         );
-  
+
         if (response.status == 200) {
           handleAlert({
-            title: "Sukses!",
+            title: "Beharsil!",
             text: "Anda berhasil mendaftar",
             icon: "success",
             popup: "my-popup",
             confirmButton: "my-success-button",
-            nextUrl: "/login",
+            nextUrl: pageUrl.link.login,
             confirmButtonText: "Masuk",
           });
         }
@@ -101,8 +107,17 @@ const RegisterComp = () => {
             confirmButtonText: "Ok",
           });
         }
-    }
-    setLoading(false);
+      }
+      setLoading(false);
+    } else {
+      handleAlert({
+        title: "Peringatan!",
+        text: "Tolong masukan semua data dengan benar.",
+        icon: "warning",
+        popup: "my-popup",
+        confirmButton: "my-warning-button",
+        confirmButtonText: "Ok",
+      });
     }
   };
 
@@ -180,9 +195,9 @@ const RegisterComp = () => {
             <div className="mb-4 relative">
               <label htmlFor="password" className="label-input block">
                 Password{" "}
-                {!regex.test(password) && password.length != 0 && (
+                {!regexTest && password.length > 0 && (
                   <span className="poppins-regular text-xs text-red-600">
-                    `6+ karakter, huruf besar, kecil, dan angka`
+                    {"(6+ karakter, huruf besar, kecil, dan angka)"}
                   </span>
                 )}
               </label>
@@ -193,7 +208,7 @@ const RegisterComp = () => {
                 name="password"
                 className="input-gray pr-10"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handleSetPassword}
                 placeholder="Ketik di sini"
               />
               <button
@@ -227,13 +242,11 @@ const RegisterComp = () => {
             <div className="mb-4 relative">
               <label htmlFor="confirm_password" className="label-input">
                 Confirm Password{" "}
-                {password != confirmPassword &&
-                  confirmPassword.length != 0 &&
-                  password.length != 0 && (
-                    <span className="poppins-regular text-xs text-red-600">
-                      `password tidak cocok`
-                    </span>
-                  )}
+                {password != confirmPassword && confirmPassword.length > 0 && (
+                  <span className="poppins-regular text-xs text-red-600">
+                    {"(password tidak cocok)"}
+                  </span>
+                )}
               </label>
               <input
                 required
@@ -291,7 +304,7 @@ const RegisterComp = () => {
                 to={pageUrl.link.login}
                 className="text-secondary hover:opacity-80"
               >
-                Coba Masuk!
+                Coba masuk!
               </Link>
             </p>
           </div>

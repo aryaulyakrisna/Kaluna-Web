@@ -116,7 +116,7 @@ body {
 }
 
 .input-gray-otp {
-  @apply bg-transparent text-gray w-full text-center focus:border-none focus:outline-none poppins-semibold text-3xl;
+  @apply bg-transparent text-black w-full text-center focus:border-none focus:outline-none poppins-semibold text-3xl;
 }
 
 .border-colorbase {
@@ -139,6 +139,10 @@ body {
 
 .my-error-button {
   @apply bg-red-500 rounded-lg shadow-lg poppins-semibold px-6
+}
+
+.my-warning-button {
+  @apply bg-yellow-500 rounded-lg shadow-lg poppins-semibold px-6
 }
 
 .loader {

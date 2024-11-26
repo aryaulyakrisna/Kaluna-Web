@@ -22,7 +22,7 @@ const LoginComp = ({ toForgotPassword }) => {
     event.preventDefault();
 
     if(!loading){
-      setLoading(!loading);
+      setLoading(true);
   
       const formData = new FormData(event.target);
       const data = Object.fromEntries(formData);
@@ -44,13 +44,12 @@ const LoginComp = ({ toForgotPassword }) => {
           sessionStorage.setItem("auth", JSON.stringify(response.data))
         }
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         const message = error.response.data.message;
         if (message == "Server Error") {
           handleSetErrorText("Mohon coba beberapa saat lagi.")
         } else {
           handleSetErrorText("Salah email atau password.");
-          console.log(errorText)
         }
       }
   
@@ -132,7 +131,7 @@ const LoginComp = ({ toForgotPassword }) => {
             className="text-sm text-black hover-text-primary cursor-pointer"
             onClick={toForgotPassword}
           >
-            Lupa Password?
+            Lupa password?
           </button>
         </div>
 
@@ -150,12 +149,12 @@ const LoginComp = ({ toForgotPassword }) => {
         {/* Register Link */}
         <div className="text-center mt-6">
           <p className="text-sm text-black">
-            Belum Punya Akun?{" "}
+            Belum punya akun?{" "}
             <Link
               to={pageUrl.link.register}
               className="text-secondary hover:opacity-80"
             >
-              Daftar Sekarang!
+              Daftar sekarang!
             </Link>
           </p>
         </div>

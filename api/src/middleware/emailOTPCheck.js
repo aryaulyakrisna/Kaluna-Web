@@ -8,18 +8,18 @@ const emailCheckMiddleware = async (req, res, next) => {
     }
 
     const result = await dbPool.query(
-      `SELECT id
+      `SELECT 1
        FROM t_user
-       WHERE email = ?`,
+       WHERE email = ?
+       LIMIT 1`,
       [email]
     );
 
     if (result[0].length === 0) {
       return res.status(400).json({ message: "Email is not registered" });
-    } else {
-      req.body = {...req.body, id: result[0][0].id}
-      next();
     }
+
+    next();
 
   } catch (error) {
     return res.status(500).json({ message: "Server error" });

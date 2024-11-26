@@ -18,7 +18,7 @@ const ForgotPasswordComp = ({ showLogin }) => {
     event.preventDefault();
 
     if (!loading) {
-      setLoading(!loading);
+      setLoading(true);
   
       const formData = new FormData(event.target);
       const data = Object.fromEntries(formData);
@@ -27,7 +27,7 @@ const ForgotPasswordComp = ({ showLogin }) => {
         const response = await axios.post(
           import.meta.env.VITE_APP_BASE_URL +
             "/" +
-            import.meta.env.VITE_APP_SENDMAIL_URL,
+            import.meta.env.VITE_APP_GETOTP_URL,
           data,
           {
             headers: {
@@ -37,6 +37,7 @@ const ForgotPasswordComp = ({ showLogin }) => {
         );
   
         if (response.status == 200) {
+          localStorage.setItem("email", JSON.stringify(data.email))
           navigate(pageUrl.link.changePassword, { state: { email: data.email } });
         }
       } catch (error) {
@@ -98,7 +99,7 @@ const ForgotPasswordComp = ({ showLogin }) => {
             className="text-secondary font-medium hover:opacity-80 text-sm"
             onClick={showLogin}
           >
-            Kembali Masuk?
+            Kembali masuk?
           </button>
         </div>
       </form>

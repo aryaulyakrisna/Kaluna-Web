@@ -1,5 +1,4 @@
 const SectionFooterComp = () => {
-
   return (
     <>
       <div className="w-full py-6 bg-colorbase text-center text-gray">
@@ -46,10 +45,16 @@ const SectionFooterComp = () => {
             </a>
           </div>
         </div>
-        <div>
-          <h1 className="text-5xl poppins-bold text-colorbase">
+
+        <div className="max-w-sm">
+          <h1 className="text-5xl poppins-bold text-colorbase mb-6">
             Kalun<span className="text-secondary">a</span>
           </h1>
+          <p className="pointer text-gray text-xs">
+            Desain aplikasi ini terinspirasi dari karya luar biasa Monage oleh
+            Nyiroki Unity. Kami menghormati kreativitas dan inovasi, ide yang
+            mereka berikan.
+          </p>
         </div>
       </div>
     </>

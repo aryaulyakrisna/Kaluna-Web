@@ -8,14 +8,15 @@ const PORT = process.env.PORT;
 // Routes
 const login = require('./routes/login');
 const register = require('./routes/register');
-const sendMail = require('./routes/sendMail');
+const sendOTP = require('./routes/sendOTP');
+const changePassword = require('./routes/changePassword');
 
 // Middlewares
 app.use(cors());
 app.use(express.json());
-const emailCheckMiddleware = require("./middleware/emailCheck")
-const sendMailCheckMiddleware = require("./middleware/sendMailCheck")
-// const template = require('./middlewares/sanitation');
+const emailCheckMiddleware = require("./middleware/emailCheck");
+const emailOTPCheckMiddleware = require("./middleware/emailOTPCheck");
+const OTPCheckMiddleware = require("./middleware/OTPCheck");
 
 app.get("/", (req, res) => {
   res.send("Running...");
@@ -23,7 +24,8 @@ app.get("/", (req, res) => {
 
 app.use('/login', login);
 app.use('/register', emailCheckMiddleware, register);
-app.use('/send-mail', sendMailCheckMiddleware, sendMail);
+app.use('/get-otp', emailOTPCheckMiddleware, sendOTP);
+app.use("/change-password", OTPCheckMiddleware, changePassword);
 
 app.listen(PORT, () => {
   console.log("Listening on port " + PORT);
